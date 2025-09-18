@@ -1,0 +1,145 @@
+###基础设置###
+    - 预览前n行，默认为5
+    print(df.head(5))
+    - 列名对齐
+    pd.set_option("display.unicode.ambiguous_as_wide",True)
+    pd.set_option("display.unicode.east_asian_width",True)
+    - 表头居中
+    pd.set_option("display.colheader_justify", "center")
+    - 禁止换行
+    pd.set_option("expand_frame_repr",False)
+    - 显示所有行/n行 None->n
+    pd.set_option("display.max_rows",None)
+    - 显示所有列/n列 None->n
+    pd.set_option("display.max_columns",None)
+    - 设置内容的显示宽度
+    pd.set_option("display.width",100)
+    - 设置数值的显示精度
+    pd.set_option("display.precision",2)
+    - 设置小数的显示格式
+    pd.set_option("display.float_format",lambda x:"%.2f" %x)
+    - 设置计算引擎
+    pd.set_option("compute.use_numba",True)
+    - 获取指定选项的设置情况
+    pd.get_option('compute.use_numba') # True
+    - 条件格式
+    pd.io.formats.style.Styler=
+
+###Series对象###
+    - 创建Series对象,index可选
+    s2=pd.Series([10,20,30],index=['a','b','c'])
+    a    10
+    b    20
+    c    30
+    dtype: int64
+    - 根据单个索引获取值
+    s2['a'] #10
+    - 根据多个索引获取值
+    s2[['a','b']]
+    - 根据索引切片获取值
+    s2['a':'b']
+    - 获取所有索引
+    s2.index
+    - 获取所有值
+    s2.values
+    - 判断空值
+    s2.hasnans
+
+###DataFrame对象###
+    pd.DataFrame(data,index,columns,dtype)
+    - 数组创建dataframe
+    data=[
+        [10,20,30],
+        [30,40,50],
+        [60,70,80]
+    ]
+    - 字典创建dataframe
+    dict={
+        "wzh":[1,2,3],
+        "cjb":[4,5,6],
+        "yes":[7,8,9]
+    }
+    index=[1,2,3]
+    columns=['wzh','cjb','True']
+    dt1=pd.DataFrame(data,index,columns)
+    """
+       wzh  cjb  True
+    1   10   20    30
+    2   30   40    50
+    3   60   70    80
+    """
+    dt2=pd.DataFrame(dict,index) # index不传就是0,1,2
+    """
+       wzh  cjb  yes
+    1    1    4    7
+    2    2    5    8
+    3    3    6    9
+    """
+    - 查看某列的唯一值
+    dt2['wzh'].unique()
+    - 查看所有元素的类型
+    dt2.dtypes
+    - 查看所有行/列名/值
+    dt2.columns/index/values
+    - 强制改名
+    dt2.columns/index=['a','b','c']
+    - 行列转置
+    dt2.T
+    - 查看行数 shape[0]=行 shape[1]=列
+    dt2.shape - 行,列
+    - 查看每列的描述统计信息,并保留2位
+    dt2.describe().round(2)
+    """
+           wzh  cjb  yes
+    count  3.0  3.0  3.0
+    mean   2.0  5.0  8.0
+    std    1.0  1.0  1.0
+    min    1.0  4.0  7.0
+    25%    1.5  4.5  7.5
+    50%    2.0  5.0  8.0
+    75%    2.5  5.5  8.5
+    max    3.0  6.0  9.0
+    """
+    - 返回每列非空值的数量
+    dt2.count()
+    - 返回每列的合计/最大/最小值
+    dt2.sum()/max()/min()
+    - 返回最大值的索引号
+    dt2['wzh'].argmax() # 2
+    - 返回最大值的索引名
+    dt2['wzh'].idxmax() # 3
+    - 返回每列的平均值
+    dt2['wzh'].mean() # 2.0
+    - 返回每列的中位值
+    dt2['wzh'].median() # 2.0
+    - 返回每列的样本方差,求总体方差var(ddof=0)
+    - 样本方差=(数据-平均值)^2相加和/(数据总量-1)
+    - 总体方差=(数据-平均值)^2相加和/数据总量
+    dt2.var()
+    - 返回每列的标准样本差()
+    - √方差
+    dt2.std()
+    - 返回dt2中的空值
+    dt2.isnull()
+    - 检查dt2中的非空值
+    dt2.notnull()
+
+####读取excel文件###
+    df=pd.read_excel("./datas/new.xls")
+    -导入指定sheet
+    df=pd.read_excel("./datas/new.xls",sheet_name="工作表2")
+    df=pd.read_excel("./datas/new.xls",sheet_name=1) # 代表导入第2张表的内容
+    - 设置第2行为索引列,如果列名有重合,会让第二个变成列名.1,可以再赋值回去
+    df=pd.read_excel("./datas/new.xls",sheet_name=0,header=1)
+    - 通过指定的列索引来导入第1行
+    df=pd.read_excel("./datas/new.xls",sheet_name=1,header=1,usecols=[0])
+    - 通过指定的列索引来导入第1,4行
+    df=pd.read_excel("./datas/new.xls",sheet_name=1,header=1,usecols=[0,3])
+    - 通过指定的列名来导入
+    df=pd.read_excel("./datas/new.xls",sheet_name=1,header=1,usecols=['w','j'])
+    - 导入csv文件
+    df=pd.read_csv("./datas/new.csv",encoding="utf-8")
+    - 导入txt文件,过滤制表符\t
+    df=pd.read_csv("./datas/new.txt",encoding="utf-8",sep='\t')
+    - 导入json文件,重置索引index
+    df=pd.read_json("./datas/new.json",orient='index')
