@@ -5,7 +5,7 @@ import pandas as pd
 df=pd.read_excel("./datas/酸通风柜QDRparticle问题排查.xlsx",sheet_name="空Run一次后颗粒数")
 
 # 取得时间戳数组
-y_label = df['日期'].dt.strftime('%m月%d日').tolist() # ['07月26日', '07月27日', '07月28日', '08月01日', '08月03日']
+y_label = df['日期'].dt.strftime('%m月%d日').tolist()
 
 data_arrays = {}
 # 去掉表头后提取第三列开始的所有数据
